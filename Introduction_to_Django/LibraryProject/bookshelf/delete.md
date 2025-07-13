@@ -1,5 +1,6 @@
 #Python Command
-Book.objects.filter(author="George Orwell").delete()
+book = Book.objects.get(author="George Orwell")
+book.delete()
 
 
 #Output
