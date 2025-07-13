@@ -1,5 +1,6 @@
 #Python Command
-Book.objects.all()
+Book.objects.get(title="1984")
+
 
 #Output
-<QuerySet [<Book: 1984 by George Orwell published in 1949>]>
+<Book: 1984 by George Orwell published in 1949>
