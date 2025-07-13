@@ -1,4 +1,5 @@
 #Python Command
+from bookshelf.models import Book
 book = Book.objects.get(author="George Orwell")
 book.delete()
 
