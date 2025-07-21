@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic.detail import DetailView
 
-def BookListView(request):
+def list_books(request):
 
     books = Book.objects.all()
     context = {'books':books}
