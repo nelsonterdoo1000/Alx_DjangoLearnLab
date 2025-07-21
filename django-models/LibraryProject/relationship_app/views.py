@@ -1,4 +1,5 @@
-from .models import Book, Author, Librarian,Library
+from .models import Library
+from .models import Book
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic.detail import DetailView
