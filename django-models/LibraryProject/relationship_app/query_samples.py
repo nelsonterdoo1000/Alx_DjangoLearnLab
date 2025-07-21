@@ -5,7 +5,7 @@ book1 = Book.objects.get(id=1)
 
 
 #List all books in a library.
-library1 = Library.objects.all()
+library1 = Library.objects.get(name='Francis Idachaba')
 print(library1)
 
 #Retrieve the librarian for a library.
