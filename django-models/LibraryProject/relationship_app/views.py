@@ -14,6 +14,8 @@ from django.views.generic import TemplateView
 from .mixins import RoleRequiredMixin
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse
+from django.contrib.auth.decorators import permission_required
+from django.views.decorators.http import require_http_methods
 
 
 
@@ -77,3 +79,49 @@ def is_member(user):
 @user_passes_test(is_member)
 def member_view(request):
     return render(request,'relationship_app/member_view.html')
+
+
+@permission_required('relationship_app.can_add_book', login_url='login')
+@require_http_methods(["POST"]) 
+def add_book(request):
+    title = request.POST.get('title')
+    author_id = request.POST.get('author_id')
+    if not title or not author_id:
+        return HttpResponse("Missing title or author_id", status=400)
+    try:
+        from .models import Author
+        author = Author.objects.get(pk=author_id)
+    except Author.DoesNotExist:
+        return HttpResponse("Author not found", status=404)
+    Book.objects.create(title=title, author=author)
+    return redirect('book_list')
+
+@permission_required('relationship_app.can_change_book', login_url='login')
+@require_http_methods(["POST"]) 
+def edit_book(request, pk):
+    try:
+        book = Book.objects.get(pk=pk)
+    except Book.DoesNotExist:
+        return HttpResponse("Book not found", status=404)
+    title = request.POST.get('title')
+    author_id = request.POST.get('author_id')
+    if title:
+        book.title = title
+    if author_id:
+        from .models import Author
+        try:
+            book.author = Author.objects.get(pk=author_id)
+        except Author.DoesNotExist:
+            return HttpResponse("Author not found", status=404)
+    book.save()
+    return redirect('book_list')
+
+@permission_required('relationship_app.can_delete_book', login_url='login')
+@require_http_methods(["POST"]) 
+def delete_book(request, pk):
+    try:
+        book = Book.objects.get(pk=pk)
+    except Book.DoesNotExist:
+        return HttpResponse("Book not found", status=404)
+    book.delete()
+    return redirect('book_list')
